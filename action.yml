@@ -14,6 +14,9 @@ inputs:
   GITHUB_TOKEN:
     description: "GitHub token to interact with the repository"
     required: true
+  VERSION_TYPE:
+    description: "Version bump type for manual releases (patch, minor, major)"
+    required: false
   LINT_AND_TESTS_COMMAND:
     description: "Команда для lint и test"
     required: false

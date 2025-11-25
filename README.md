@@ -111,6 +111,17 @@ name: Automated Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: 'patch'
 
 permissions:
   contents: write
@@ -122,23 +133,32 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Required for changelog generation
-          
+
       - name: Auto Release with AI
         uses: zxcnoname666/release-helper@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          VERSION_TYPE: ${{ github.event.inputs.version_type }}
 ```
 
 ### Step 2: Trigger Release
 
-Commit with release command:
+**Option A: Via Commit Message (Automatic)**
 
 ```bash
 git commit -m "feat: add awesome new feature
 !release: minor"
 git push
 ```
+
+**Option B: Via Manual Workflow (workflow_dispatch)**
+
+1. Go to your repository on GitHub
+2. Click "Actions" → "Automated Release"
+3. Click "Run workflow"
+4. Select version type (patch/minor/major)
+5. Click "Run workflow"
 
 ### Step 3: Enjoy Automated Releases! 🎉
 
@@ -158,6 +178,14 @@ The action will automatically:
 | Parameter | Description |
 |-----------|-------------|
 | `GITHUB_TOKEN` | GitHub token for API access (automatic in Actions) |
+
+### Manual Release Configuration
+
+| Parameter | Description |
+|-----------|-------------|
+| `VERSION_TYPE` | Manual version bump type: `patch`, `minor`, or `major` *(optional, for workflow_dispatch)* |
+
+> **Note**: When using `workflow_dispatch`, pass the version type via `VERSION_TYPE` input. When using commit-based releases, use `!release: major/minor/patch` in commit message.
 
 ### AI Configuration
 
@@ -231,6 +259,47 @@ The action will automatically:
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     OPENAI_API_BASE_URL: "https://api.your-proxy.com/v1"
 ```
+
+### Manual Release (workflow_dispatch)
+
+Perfect for on-demand releases without commit message commands:
+
+```yaml
+name: Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: 'patch'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Manual Release
+        uses: zxcnoname666/release-helper@main
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          VERSION_TYPE: ${{ github.event.inputs.version_type }}
+```
+
+> **Tip**: Combine both triggers (`push` and `workflow_dispatch`) in a single workflow to support both automatic and manual releases!
 
 ### Multilingual Changelogs
 

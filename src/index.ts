@@ -43,21 +43,38 @@ async function run(): Promise<void> {
     info(`Repository: ${owner}/${repo}`);
     info(`Commit: ${sha}`);
 
-    // ====== 2. Check for release command ======
-    const commitMessage = context.payload.head_commit?.message || '';
-    const releaseType = parseReleaseType(commitMessage);
+    // ====== 2. Determine release type ======
+    let releaseType: 'major' | 'minor' | 'patch' | null = null;
+    const versionTypeInput = getInput('VERSION_TYPE');
 
-    if (!releaseType) {
-      if (commitMessage.includes('!release')) {
+    // Check for manual trigger (workflow_dispatch with VERSION_TYPE input)
+    if (versionTypeInput) {
+      const normalizedType = versionTypeInput.toLowerCase();
+      if (['major', 'minor', 'patch'].includes(normalizedType)) {
+        releaseType = normalizedType as 'major' | 'minor' | 'patch';
+        info(`📦 Manual release triggered: ${releaseType.toUpperCase()}`);
+      } else {
         throw new Error(
-          'Release command found but invalid format. Use: !release: major/minor/patch'
+          `Invalid VERSION_TYPE: ${versionTypeInput}. Must be: major, minor, or patch`
         );
       }
-      info('No release command found in commit message. Exiting.');
-      return;
-    }
+    } else {
+      // Fall back to commit message parsing (push event)
+      const commitMessage = context.payload.head_commit?.message || '';
+      releaseType = parseReleaseType(commitMessage);
 
-    info(`📦 Release type: ${releaseType.toUpperCase()}`);
+      if (!releaseType) {
+        if (commitMessage.includes('!release')) {
+          throw new Error(
+            'Release command found but invalid format. Use: !release: major/minor/patch'
+          );
+        }
+        info('No release command found in commit message. Exiting.');
+        return;
+      }
+
+      info(`📦 Release type: ${releaseType.toUpperCase()}`);
+    }
 
     // ====== 3. Validate environment ======
     info('Validating environment...');
