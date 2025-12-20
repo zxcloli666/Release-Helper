@@ -341,7 +341,7 @@ Contributors are recognized in:
 
 Have questions about contributing?
 
-- Open a [Discussion](https://github.com/loli669/release-helper/discussions)
+- Open a [Discussion](https://github.com/zxcloli666/release-helper/discussions)
 - Comment on existing issues
 - Reach out to maintainers
 
