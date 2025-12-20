@@ -6,7 +6,7 @@
 
 **Automated GitHub Release Management | AI Changelog Generator | Smart Version Bumping**
 
-[![GitHub Release](https://img.shields.io/github/v/release/loli669/release-helper?style=flat-square&logo=github)](https://github.com/loli669/release-helper/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/zxcloli666/release-helper?style=flat-square&logo=github)](https://github.com/zxcloli666/release-helper/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-Compatible-2088FF?style=flat-square&logo=github-actions)](https://github.com/features/actions)
@@ -135,7 +135,7 @@ jobs:
           fetch-depth: 0  # Required for changelog generation
 
       - name: Auto Release with AI
-        uses: loli669/release-helper@main
+        uses: zxcloli666/release-helper@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -220,7 +220,7 @@ The action will automatically:
 ### Basic Usage with AI
 
 ```yaml
-- uses: loli669/release-helper@main
+- uses: zxcloli666/release-helper@main
   with:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -229,7 +229,7 @@ The action will automatically:
 ### Full-Featured Setup
 
 ```yaml
-- uses: loli669/release-helper@main
+- uses: zxcloli666/release-helper@main
   with:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -244,7 +244,7 @@ The action will automatically:
 ### Without AI (Traditional Changelog)
 
 ```yaml
-- uses: loli669/release-helper@main
+- uses: zxcloli666/release-helper@main
   with:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     # No OPENAI_API_KEY - uses conventional commits only
@@ -253,7 +253,7 @@ The action will automatically:
 ### Custom OpenAI Endpoint
 
 ```yaml
-- uses: loli669/release-helper@main
+- uses: zxcloli666/release-helper@main
   with:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -292,7 +292,7 @@ jobs:
           fetch-depth: 0
 
       - name: Manual Release
-        uses: loli669/release-helper@main
+        uses: zxcloli666/release-helper@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -307,21 +307,21 @@ Generate changelogs in different languages:
 
 ```yaml
 # Russian changelog
-- uses: loli669/release-helper@main
+- uses: zxcloli666/release-helper@main
   with:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     LANGUAGE: ru
 
 # Spanish changelog
-- uses: loli669/release-helper@main
+- uses: zxcloli666/release-helper@main
   with:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     LANGUAGE: es
 
 # German changelog
-- uses: loli669/release-helper@main
+- uses: zxcloli666/release-helper@main
   with:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -497,7 +497,7 @@ Contributors: 4 | Commits: 15
 Rich embeds with release information:
 
 ```yaml
-- uses: loli669/release-helper@main
+- uses: zxcloli666/release-helper@main
   with:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -552,7 +552,7 @@ src/
 
 ```bash
 # Clone repository
-git clone https://github.com/loli669/release-helper.git
+git clone https://github.com/zxcloli666/release-helper.git
 cd release-helper
 
 # Install dependencies
@@ -581,7 +581,7 @@ dist/
 
 | Project | Description |
 |---------|-------------|
-| [AI Code Review](https://github.com/loli669/AI-Code-Review) | AI-powered code review automation |
+| [AI Code Review](https://github.com/zxcloli666/AI-Code-Review) | AI-powered code review automation |
 
 ---
 
@@ -605,8 +605,8 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## 📞 Support
 
-- 📫 Issues: [GitHub Issues](https://github.com/loli669/release-helper/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/loli669/release-helper/discussions)
+- 📫 Issues: [GitHub Issues](https://github.com/zxcloli666/release-helper/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/zxcloli666/release-helper/discussions)
 - ⭐ Star this repo if it helps you!
 
 ---
@@ -619,21 +619,21 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 <div align="center">
 
-**Made with ❤️ by [loli669](https://github.com/loli669)**
+**Made with ❤️ by [zxcloli666](https://github.com/zxcloli666)**
 
 ⭐ Star this repo to support the project!
 
-[Report Bug](https://github.com/loli669/release-helper/issues) • [Request Feature](https://github.com/loli669/release-helper/issues) • [Documentation](https://github.com/loli669/release-helper#readme)
+[Report Bug](https://github.com/zxcloli666/release-helper/issues) • [Request Feature](https://github.com/zxcloli666/release-helper/issues) • [Documentation](https://github.com/zxcloli666/release-helper#readme)
 
 ---
 
 <img src="https://count.getloli.com/get/@release-helper">
 
- <a href="https://github.com/loli669/Release-Helper">
+ <a href="https://github.com/zxcloli666/Release-Helper">
   <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=loli669/Release-Helper&type=date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=loli669/Release-Helper&type=date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=loli669/Release-Helper&type=date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=zxcloli666/Release-Helper&type=date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=zxcloli666/Release-Helper&type=date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=zxcloli666/Release-Helper&type=date" />
   </picture>
  </a>
 </div>

@@ -3,7 +3,7 @@ name: Question
 about: Ask a question about usage or configuration
 title: '[QUESTION] '
 labels: question
-assignees: 'loli669'
+assignees: 'zxcloli666'
 ---
 
 ## ❓ Question
