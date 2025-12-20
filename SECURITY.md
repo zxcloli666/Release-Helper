@@ -14,7 +14,7 @@ The security of Release Helper is a top priority. If you discover a security vul
 **1. Report Privately**
 
 Contact us directly at:
-- **GitHub Security Advisories**: [Report a vulnerability](https://github.com/zxcnoname666/release-helper/security/advisories/new) (preferred)
+- **GitHub Security Advisories**: [Report a vulnerability](https://github.com/loli669/release-helper/security/advisories/new) (preferred)
 
 **2. Include Details**
 
@@ -253,11 +253,11 @@ We recognize security researchers who help improve Release Helper's security:
 ## 📞 Contact
 
 **Security Team:**
-- GitHub: [@zxcnoname666](https://github.com/zxcnoname666)
+- GitHub: [@loli669](https://github.com/loli669)
 
-**For general questions:** Open a [Discussion](https://github.com/zxcnoname666/release-helper/discussions)
+**For general questions:** Open a [Discussion](https://github.com/loli669/release-helper/discussions)
 
-**For bugs (non-security):** Open an [Issue](https://github.com/zxcnoname666/release-helper/issues)
+**For bugs (non-security):** Open an [Issue](https://github.com/loli669/release-helper/issues)
 
 ## 📜 Disclosure Policy
 
@@ -284,4 +284,4 @@ This security policy may be updated periodically. Check this page for the latest
 
 Thank you for helping keep Release Helper and its users safe! Your responsible disclosure helps protect the entire community.
 
-If you have suggestions for improving this security policy, please open a [Discussion](https://github.com/zxcnoname666/release-helper/discussions).
+If you have suggestions for improving this security policy, please open a [Discussion](https://github.com/loli669/release-helper/discussions).
