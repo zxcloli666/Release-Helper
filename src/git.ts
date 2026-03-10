@@ -26,8 +26,8 @@ async function execGit(args: string[]): Promise<string> {
  */
 export async function getLatestVersionTag(): Promise<string | undefined> {
   try {
-    // Get all tags sorted by version
-    const output = await execGit(['tag', '--sort=-version:refname', '--list', 'v*.*.*']);
+    // Get all tags sorted by version (equivalent to: git tag --sort=-v:refname | head -n1)
+    const output = await execGit(['tag', '--sort=-v:refname']);
     if (!output) {
       return undefined;
     }

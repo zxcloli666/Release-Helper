@@ -25,6 +25,17 @@ export function parseReleaseType(message: string): ReleaseType | null {
 }
 
 /**
+ * Parse additional flags from commit message:
+ *   !ai: off / !ai: false  → disable AI changelog generation
+ *   !draft: true           → create a draft release
+ */
+export function parseCommitFlags(message: string): { aiDisabled: boolean; draftRelease: boolean } {
+  const aiDisabled = /!ai:\s*(off|false)/i.test(message);
+  const draftRelease = /!draft:\s*true/i.test(message);
+  return { aiDisabled, draftRelease };
+}
+
+/**
  * Calculate next version based on release type
  */
 export function bumpVersion(
