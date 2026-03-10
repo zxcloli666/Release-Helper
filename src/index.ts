@@ -6,7 +6,7 @@
 import { getInput, info, setFailed, warning } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 import type { ActionConfig, AIContext, ReleaseStats, VersionInfo } from './types.js';
-import { parseReleaseType, createVersionInfo } from './version.js';
+import { parseReleaseType, parseCommitFlags, createVersionInfo } from './version.js';
 import { assertCleanWorkingDir, assertOnBranch, getCommitsBetween as getLocalCommits, getRangeStats, getCommitDate } from './git.js';
 import { parseCommits, validateConventionalCommits, getContributors } from './commits.js';
 import { getLatestReleaseTag, createTag, getCommitsBetween, createRelease, uploadReleaseAsset, sendDiscordNotification } from './github.js';
@@ -43,9 +43,19 @@ async function run(): Promise<void> {
     info(`Repository: ${owner}/${repo}`);
     info(`Commit: ${sha}`);
 
-    // ====== 2. Determine release type ======
+    // ====== 2. Determine release type and commit flags ======
     let releaseType: 'major' | 'minor' | 'patch' | null = null;
     const versionTypeInput = getInput('VERSION_TYPE');
+    const commitMessage = context.payload.head_commit?.message || '';
+
+    // Parse additional flags from commit message
+    const commitFlags = parseCommitFlags(commitMessage);
+    if (commitFlags.aiDisabled) {
+      info('🚫 AI changelog generation disabled via commit flag (!ai: off/false)');
+    }
+    if (commitFlags.draftRelease) {
+      info('📝 Draft release mode enabled via commit flag (!draft: true)');
+    }
 
     // Check for manual trigger (workflow_dispatch with VERSION_TYPE input)
     if (versionTypeInput) {
@@ -60,7 +70,6 @@ async function run(): Promise<void> {
       }
     } else {
       // Fall back to commit message parsing (push event)
-      const commitMessage = context.payload.head_commit?.message || '';
       releaseType = parseReleaseType(commitMessage);
 
       if (!releaseType) {
@@ -156,21 +165,29 @@ async function run(): Promise<void> {
       language: config.language,
     };
 
-    const aiConfig = config.openaiApiKey
-      ? {
-          apiKey: config.openaiApiKey,
-          model: config.openaiApiModel,
-          baseUrl: config.openaiApiBaseUrl,
-        }
-      : undefined;
+    let changelog: string;
 
-    let changelog = await generateChangelog(aiContext, aiConfig);
+    if (commitFlags.aiDisabled) {
+      info('Skipping AI generation — producing stats-only release notes');
+      changelog = generateStatsSection(stats, versionInfo, { owner, repo });
+    } else {
+      const aiConfig = config.openaiApiKey
+        ? {
+            apiKey: config.openaiApiKey,
+            model: config.openaiApiModel,
+            baseUrl: config.openaiApiBaseUrl,
+          }
+        : undefined;
 
-    // Add statistics section (AI is instructed not to add it)
-    changelog += '\n\n' + generateStatsSection(stats, versionInfo, { owner, repo });
+      changelog = await generateChangelog(aiContext, aiConfig);
+
+      // Add statistics section (AI is instructed not to add it)
+      changelog += '\n\n' + generateStatsSection(stats, versionInfo, { owner, repo });
+    }
 
     // ====== 10. Create release ======
-    info('Creating GitHub release...');
+    const isDraft = config.draftRelease || commitFlags.draftRelease;
+    info(`Creating GitHub release${isDraft ? ' (draft)' : ''}...`);
     const release = await createRelease(
       octokit,
       owner,
@@ -178,7 +195,7 @@ async function run(): Promise<void> {
       versionInfo.current,
       changelog,
       {
-        draft: config.draftRelease,
+        draft: isDraft,
         prerelease: config.prerelease,
       }
     );
