@@ -30,8 +30,8 @@ export function parseReleaseType(message: string): ReleaseType | null {
  *   !draft: true           → create a draft release
  */
 export function parseCommitFlags(message: string): { aiDisabled: boolean; draftRelease: boolean } {
-  const aiDisabled = /!ai:\s*(off|false)/i.test(message);
-  const draftRelease = /!draft:\s*true/i.test(message);
+  const aiDisabled = /!ai:\s*(off|false)/i.test(message) || /!ai-off\b/i.test(message);
+  const draftRelease = /!draft:\s*true/i.test(message) || /!draft\b/i.test(message);
   return { aiDisabled, draftRelease };
 }
 
