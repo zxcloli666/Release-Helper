@@ -8,6 +8,7 @@ import type { CommitInfo } from './types.js';
 import { readFileSync } from 'fs';
 import { lookup } from 'mime-types';
 import { getLatestVersionTag } from './git.js';
+import { compareVersions } from './version.js';
 
 type Octokit = ReturnType<typeof getOctokit>;
 
@@ -19,22 +20,38 @@ export async function getLatestReleaseTag(
   owner: string,
   repo: string
 ): Promise<string | undefined> {
+  let releaseTag: string | undefined;
+
   try {
     const release = await octokit.rest.repos.getLatestRelease({ owner, repo });
-    return release.data.tag_name;
+    releaseTag = release.data.tag_name;
   } catch (error: any) {
-    if (error.status === 404) {
-      // No "latest" release found, try to get latest tag from git
-      warning('No latest release found via GitHub API, trying to get latest tag from git...');
-      const gitTag = await getLatestVersionTag();
-      if (gitTag) {
-        info(`Found latest tag from git: ${gitTag}`);
-        return gitTag;
-      }
-      return undefined; // No releases or tags yet
+    if (error.status !== 404) {
+      throw error;
     }
-    throw error;
+    warning('No latest published release found via GitHub API');
   }
+
+  // Always check git tags too — tags may exist from draft releases or non-release CI jobs
+  const gitTag = await getLatestVersionTag();
+
+  if (!releaseTag && !gitTag) return undefined;
+  if (!releaseTag) {
+    info(`Found latest tag from git: ${gitTag}`);
+    return gitTag;
+  }
+  if (!gitTag) return releaseTag;
+
+  try {
+    if (compareVersions(gitTag, releaseTag) > 0) {
+      info(`Latest git tag (${gitTag}) is newer than latest published release (${releaseTag}), using git tag`);
+      return gitTag;
+    }
+  } catch {
+    // Tags are not valid semver — fall back to release tag
+  }
+
+  return releaseTag;
 }
 
 /**
