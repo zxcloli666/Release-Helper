@@ -6,7 +6,7 @@
 import { getInput, info, setFailed, warning } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 import type { ActionConfig, AIContext, ReleaseStats, VersionInfo } from './types.js';
-import { parseReleaseType, parseCommitFlags, createVersionInfo } from './version.js';
+import { parseReleaseType, parseCommitFlags, parseMessageOverride, createVersionInfo } from './version.js';
 import { assertCleanWorkingDir, assertOnBranch, getCommitsBetween as getLocalCommits, getRangeStats, getCommitDate } from './git.js';
 import { parseCommits, validateConventionalCommits, getContributors } from './commits.js';
 import { getLatestReleaseTag, createTag, getCommitsBetween, createRelease, uploadReleaseAsset, sendDiscordNotification } from './github.js';
@@ -33,6 +33,8 @@ async function run(): Promise<void> {
       draftRelease: getInput('DRAFT_RELEASE') === 'true',
       prerelease: getInput('PRERELEASE') === 'true',
       language: getInput('LANGUAGE') || 'en',
+      releaseBanner: getInput('RELEASE_BANNER') || undefined,
+      releaseFooter: getInput('RELEASE_FOOTER') || undefined,
     };
 
     const octokit = getOctokit(config.githubToken);
@@ -55,6 +57,13 @@ async function run(): Promise<void> {
     }
     if (commitFlags.draftRelease) {
       info('📝 Draft release mode enabled via commit flag (!draft: true)');
+    }
+
+    // Parse a custom release message from the commit ([message]...[/message]).
+    // When present, it replaces the AI-generated changelog.
+    const messageOverride = parseMessageOverride(commitMessage);
+    if (messageOverride) {
+      info('✍️ Custom release message found in commit ([message]...[/message]) — skipping AI generation');
     }
 
     // Check for manual trigger (workflow_dispatch with VERSION_TYPE input)
@@ -167,7 +176,10 @@ async function run(): Promise<void> {
 
     let changelog: string;
 
-    if (commitFlags.aiDisabled) {
+    if (messageOverride) {
+      info('Using custom release message from commit instead of AI generation');
+      changelog = messageOverride;
+    } else if (commitFlags.aiDisabled) {
       info('Skipping AI generation — producing stats-only release notes');
       changelog = generateStatsSection(stats, versionInfo, { owner, repo });
     } else {
@@ -184,6 +196,17 @@ async function run(): Promise<void> {
       // Add statistics section (AI is instructed not to add it)
       changelog += '\n\n' + generateStatsSection(stats, versionInfo, { owner, repo });
     }
+
+    // Add banner on top and footer on bottom of the release body
+    const bodyParts: string[] = [];
+    if (config.releaseBanner) {
+      bodyParts.push(config.releaseBanner);
+    }
+    bodyParts.push(changelog);
+    if (config.releaseFooter) {
+      bodyParts.push(config.releaseFooter);
+    }
+    changelog = bodyParts.join('\n\n');
 
     // ====== 10. Create release ======
     const isDraft = config.draftRelease || commitFlags.draftRelease;

@@ -36,6 +36,25 @@ export function parseCommitFlags(message: string): { aiDisabled: boolean; draftR
 }
 
 /**
+ * Extract a custom release message from a commit message.
+ * If the commit contains a block like:
+ *   [message]
+ *   ...custom text...
+ *   [/message]
+ * the inner text is returned and used as the release body instead of the
+ * AI-generated changelog. Returns null when no such block is present.
+ */
+export function parseMessageOverride(message: string): string | null {
+  const match = message.match(/\[message\]([\s\S]*?)\[\/message\]/i);
+  if (!match) {
+    return null;
+  }
+
+  const content = match[1].trim();
+  return content.length > 0 ? content : null;
+}
+
+/**
  * Calculate next version based on release type
  */
 export function bumpVersion(

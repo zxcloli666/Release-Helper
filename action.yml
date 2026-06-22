@@ -58,3 +58,9 @@ inputs:
     description: "Язык для генерации changelog (en, ru, и т.д.)"
     required: false
     default: "en"
+  RELEASE_BANNER:
+    description: "Текст-баннер, добавляемый сверху тела релиза"
+    required: false
+  RELEASE_FOOTER:
+    description: "Текст-футтер, добавляемый снизу тела релиза"
+    required: false
