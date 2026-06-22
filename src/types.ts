@@ -20,6 +20,8 @@ export interface ActionConfig {
   draftRelease: boolean;
   prerelease: boolean;
   language: string;
+  releaseBanner?: string;
+  releaseFooter?: string;
 }
 
 /**
